@@ -4,10 +4,10 @@ const usersCtrl = require('./../controllers/user.controllers');
 
 const router = Router();
 
-const { createUser, getUserByEmail, getUserByToken, postUserComment, postFavMovie } = usersCtrl;
+const { createUser, getUserByUser, getUserByToken, postUserComment, postFavMovie } = usersCtrl;
 
 router.route('/')
-  .post(getUserByEmail)
+  .post(getUserByUser)
   .get(checkToken, getUserByToken);
 
 router.route('/register')
