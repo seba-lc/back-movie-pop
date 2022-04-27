@@ -1,15 +1,16 @@
 const { Router } = require('express');
-const { checkToken } = require('../middlewares/auth');
+const { checkToken, checkOrigin } = require('../middlewares/auth');
 const commentCtrl = require('./../controllers/comment.controllers');
 
 const router = Router();
 
-const { createUserComment, getCommentByMovieId } = commentCtrl;
+const { createUserComment, getCommentByMovieId, deleteComment } = commentCtrl;
 
 router.route('/')
-  .post(checkToken, createUserComment);
+  .post(checkToken, checkOrigin, createUserComment);
 
 router.route('/:id')
-  .get(getCommentByMovieId);
+  .get(checkOrigin, getCommentByMovieId)
+  .delete(checkToken, checkOrigin, deleteComment);
 
 module.exports = router;

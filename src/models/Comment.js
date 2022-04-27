@@ -5,7 +5,6 @@ const CommentSchema = new Schema({
     type: String,
     required: true,
     trim: true,
-    uppercase: true,
     minlength: 2,
     maxlength: 30
   },

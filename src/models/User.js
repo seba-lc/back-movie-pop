@@ -24,17 +24,11 @@ const UserSchema = new Schema({
     minlength: 8,
     maxlength: 80
   },
-  favMovies: {
-    type: Array,
-    required: true,
-    default: []
-  },
-  comments: {
-    type: [Schema.Types.ObjectId],
-    ref: 'Comment',
-    required: true,
-    default: []
-  }
+  favMovies: [{
+    type: String,
+    minlength: 5,
+    maxlength: 50
+  }]
 }, {
   versionKey: false,
   timestamps: true

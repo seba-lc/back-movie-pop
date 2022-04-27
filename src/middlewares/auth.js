@@ -22,3 +22,11 @@ exports.checkToken = (req, res, next) => {
     res.status(500).json({message: 'Error en el servidor'})
   }
 }
+
+exports.checkOrigin = (req, res, next) => {
+  if(req.headers.origin === process.env.URL_ORIGIN){
+    next();
+  }else{
+    res.status(400).json({ok: false, message: 'Pagina de Origen no válida'})
+  }
+}

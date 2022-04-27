@@ -9,6 +9,7 @@ const usersCtrl = {};
 usersCtrl.createUser = async (req, res) => {
   try {
     const userInfo = req.body;
+    userInfo.favMovies = [];
     const salt = await bcrypt.genSalt(10);
     userInfo.password = await bcrypt.hash(userInfo.password, salt);
     const newUser = new User(userInfo);
@@ -31,20 +32,20 @@ usersCtrl.createUser = async (req, res) => {
 /*user, password*/
 usersCtrl.getUserByUser = async (req, res) => {
   try {
-    const user = await User.findOne({user: req.body.user});
+    const user = await User.findOne({user: req.body.user}).select('-createdAt -updatedAt');
     if(user != null){
       const result = await bcrypt.compare(req.body.password, user.password);
       if(result){
         const token = jwt.sign({id: user._id}, process.env.S_WORD, {expiresIn: process.env.EXPIRATION_TIME});
-        res.status(200).json({id: token, name: user.name, user: user.user});
+        res.status(200).json({id: token, name: user.name, user: user.user, favMovies: user.favMovies, comments: user.comments});
         return;
       }else{
-        res.status(404).json({
+        res.status(201).json({
           message: 'Datos Incorrectos'
         })
       };
     }else{
-      res.status(404).json({
+      res.status(201).json({
         message: 'Datos Incorrectos'
       })
     }
@@ -58,27 +59,8 @@ usersCtrl.getUserByUser = async (req, res) => {
 
 usersCtrl.getUserByToken = async (req, res) => {
   try {
-    const user = await User.findById(req.id).select('-_id name user');
+    const user = await User.findById(req.id).select('-_id -password -createdAt -updatedAt');
     res.status(200).json(user)
-  } catch (error) {
-    console.log(error);
-    res.status(404).json({
-      message: 'Error al cargar el usuario, intentelo nuevamente'
-    })
-  }
-}
-
-/*user, commentId*/
-usersCtrl.postUserComment = async (req, res) => {
-  try {
-    const commentPosted = await User.findOneAndUpdate(
-      {user: req.body.user},
-      { "$push": {"comments": req.body.commentId} },
-      { "new": true, "upsert": true }
-    );
-    res.status(200).json({
-      message: "Comentario agregado Correctamente"
-    });
   } catch (error) {
     console.log(error);
     res.status(404).json({
