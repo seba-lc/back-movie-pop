@@ -88,4 +88,19 @@ usersCtrl.postFavMovie = async (req, res) => {
   }
 }
 
+/*user, favMovies(new)*/
+usersCtrl.updateFavMovies = async (req, res) => {
+  try {
+    const updatedArray = await User.findOneAndUpdate({user: req.body.user}, {favMovies: req.body.favMovies});
+    res.status(200).json({
+      message: "Favoritos Actualizados Correctamente"
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      message: 'Error al cargar el usuario, intentelo nuevamente'
+    })
+  }
+}
+
 module.exports = usersCtrl;

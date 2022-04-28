@@ -4,7 +4,7 @@ const usersCtrl = require('./../controllers/user.controllers');
 
 const router = Router();
 
-const { createUser, getUserByUser, getUserByToken, postFavMovie } = usersCtrl;
+const { createUser, getUserByUser, getUserByToken, postFavMovie, updateFavMovies } = usersCtrl;
 
 router.route('/')
   .post(checkOrigin, getUserByUser)
@@ -15,5 +15,8 @@ router.route('/register')
 
 router.route('/favorites')
   .post(checkToken, postFavMovie);
+
+router.route('/deletefav')
+  .post(checkToken, updateFavMovies);
 
 module.exports = router;
